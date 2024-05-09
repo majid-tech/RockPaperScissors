@@ -3,12 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RockPaperScissor</title>
+    <title>Rock Paper Scissors</title>
 </head>
 <body>
+    <div id="result"></div>
+    <div id="score"></div>
+    <button id="rock">Rock</button>
+    <button id="paper">Paper</button>
+    <button id="scissors">Scissors</button>
+    <script>
+        let humanScore = 0;
+        let computerScore = 0;
 
-    
-    <script src="interactivity.js">
+        function getComputerChoice() {
+            const computerChoices = ["rock", "paper", "scissor"];
+            return computerChoices[Math.floor(Math.random() * computerChoices.length)];
+        }
+
+        function playRound(humanChoice, computerChoice) {
+            const resultDiv = document.getElementById('result');
+            const scoreDiv = document.getElementById('score');
+
+            if (humanChoice === computerChoice) {
+                resultDiv.textContent = "It's a tie";
+            } else if (
+                (humanChoice === 'rock' && computerChoice === 'paper') ||
+                (humanChoice === 'paper' && computerChoice === 'scissor') ||
+                (humanChoice === 'scissor' && computerChoice === 'rock')
+            ) {
+                computerScore++;
+                resultDiv.textContent = `You lose! ${computerChoice} beats ${humanChoice}`;
+            } else if (
+                (humanChoice === 'rock' && computerChoice === 'scissor') ||
+                (humanChoice === 'paper' && computerChoice === 'rock') ||
+                (humanChoice === 'scissor' && computerChoice === 'paper')
+            ) {
+                humanScore++;
+                resultDiv.textContent = `You win! ${humanChoice} beats ${computerChoice}`;
+            }
+            scoreDiv.textContent = `Human Score: ${humanScore}, Computer Score: ${computerScore}`;
+
+            if (humanScore === 5 || computerScore === 5) {
+                announceWinner();
+                disableButtons();
+            }
+        }
+
+        function announceWinner() {
+            const resultDiv = document.getElementById('result');
+            if (humanScore === 5) {
+                resultDiv.textContent += "\nCongratulations! You win the game!";
+            } else {
+                resultDiv.textContent += "\nSorry! Computer wins the game!";
+            }
+        }
+
+        function disableButtons() {
+            document.querySelectorAll('button').forEach(button => {
+                button.disabled = true;
+            });
+        }
+
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                const humanSelection = this.id;
+                const computerSelection = getComputerChoice();
+                playRound(humanSelection, computerSelection);
+            });
+        });
     </script>
 </body>
 </html>
